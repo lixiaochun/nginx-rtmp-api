@@ -1,0 +1,39 @@
+<configuration>
+    <property name="LOG_PATH" value="./log" />
+    <property name="LOG_FILE_NAME" value="service" />
+    <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{36}) - %msg %n
+            </Pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>TRACE</level>
+        </filter>
+    </appender>
+
+    <appender name="dailyRollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_PATH}/${LOG_FILE_NAME}.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <FileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <!-- keep 30 days' worth of history -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{35} - %msg %n</Pattern>
+        </encoder>
+    </appender>
+
+    <logger name="logger" additivity="false">
+        <level value="DEBUG" />
+        <appender-ref ref="dailyRollingFileAppender"/>
+        <appender-ref ref="consoleAppender" />
+    </logger>
+
+    <root>
+        <level value="INFO" />
+        <appender-ref ref="consoleAppender" />
+        <appender-ref ref="dailyRollingFileAppender" />
+    </root>
+</configuration>
